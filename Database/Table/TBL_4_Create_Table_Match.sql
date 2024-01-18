@@ -9,8 +9,11 @@ BEGIN
         Uuid UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(),
         HomeTeamId INT FOREIGN KEY REFERENCES Team(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         AwayTeamId INT FOREIGN KEY REFERENCES Team(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        HomeTeamScore INT NOT NULL DEFAULT 0,
-        AwayTeamScore INT NOT NULL DEFAULT 0,
+        HomeTeamNormalTimeScore INT NOT NULL DEFAULT 0,
+        AwayTeamNormalTimeScore INT NOT NULL DEFAULT 0,
+        HomeTeamPenaltyScore INT NULL,
+        AwayTeamPenaltyScore INT NULL,
+        MatchWinnerId INT NOT NULL,
         ChampionshipStage INT NOT NULL,
         ChampionshipId INT FOREIGN KEY REFERENCES Championship(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     );
