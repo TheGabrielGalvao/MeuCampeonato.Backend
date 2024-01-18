@@ -1,5 +1,7 @@
+using AutoMapper;
 using Database;
 using Domain.DTO.Settings;
+using Mapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -16,16 +18,16 @@ var configuration = new ConfigurationBuilder()
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddTransient<AppDbContext>(_ => new AppDbContext(connectionString));
 
-// Add services to the container.
+IMapper mapper = EntityMapper.Configure();
+builder.Services.AddSingleton(mapper);
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Meu Campeonato API", Version = "v1" });
 
-    // Configurar a operação de segurança para autenticação JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme",
@@ -53,7 +55,6 @@ builder.Services.AddSwaggerGen(c =>
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettingsDTO>();
 
 
-
 var tokenValidationParameters = new TokenValidationParameters
 {
     ValidateIssuer = false,
@@ -74,6 +75,10 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.Configure<JwtSettingsDTO>(builder.Configuration.GetSection("JwtSettings"));
+
+RepositoryMapper.Map(builder.Services, configuration);
+
+ServiceMapper.Map(builder.Services, configuration);
 
 var app = builder.Build();
 
