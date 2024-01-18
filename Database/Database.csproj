@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Schema\SCH_1_Create_Schema_auth.sql" />
+    <None Remove="Table\TBL_1_Create_Table_User.sql" />
+    <None Remove="Table\TBL_2_Create_Table_Team.sql" />
+    <None Remove="Table\TBL_3_Create_Table_Championship.sql" />
+    <None Remove="Table\TBL_4_Create_Table_Match.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Schema\SCH_1_Create_Schema_auth.sql" />
+    <EmbeddedResource Include="Table\TBL_1_Create_Table_User.sql" />
+    <EmbeddedResource Include="Table\TBL_2_Create_Table_Team.sql" />
+    <EmbeddedResource Include="Table\TBL_3_Create_Table_Championship.sql" />
+    <EmbeddedResource Include="Table\TBL_4_Create_Table_Match.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="dbup" Version="5.0.37" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+
+</Project>
