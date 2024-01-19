@@ -11,6 +11,7 @@ namespace Mapper
         {
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<ITeamService, TeamService>();
         }
     }
 }

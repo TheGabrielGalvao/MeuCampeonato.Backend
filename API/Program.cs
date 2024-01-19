@@ -91,6 +91,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthorization();
+
 app.UseCors(builder =>
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
@@ -98,7 +100,7 @@ app.UseCors(builder =>
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+
 
 app.MapControllers();
 

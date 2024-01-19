@@ -1,30 +1,32 @@
-﻿using Domain.DTO;
+﻿using AutoMapper;
+using Domain.DTO;
 using Domain.Interface.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.v1
 {
-    [Authorize]
+    
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class UserController : ControllerBase
+    public class TeamController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly ITeamService _teamService;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserService userService)
+        public TeamController(ITeamService teamService, IMapper mapper)
         {
-            _userService = userService;
+            _teamService = teamService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var users = await _userService.GetAllAsync();
-                return Ok(users);
+                var teams = await _teamService.GetAllAsync();
+                return Ok(teams);
             }
             catch (Exception ex)
             {
@@ -33,17 +35,16 @@ namespace API.Controllers.v1
         }
 
         [HttpGet("{uuid}")]
-        [Authorize]
         public async Task<IActionResult> Get(Guid uuid)
         {
             try
             {
-                var user = await _userService.GetByIdAsync(uuid);
-                if (user == null)
+                var team = await _teamService.GetByIdAsync(uuid);
+                if (team == null)
                 {
                     return NotFound();
                 }
-                return Ok(user);
+                return Ok(team);
             }
             catch (Exception ex)
             {
@@ -52,13 +53,12 @@ namespace API.Controllers.v1
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Create([FromBody] UserRequest user)
+        public async Task<IActionResult> Create([FromBody] TeamRequest team)
         {
             try
             {
-                var createdUser = await _userService.AddAsync(user);
-                return CreatedAtAction(nameof(Get), new { uuid = createdUser.Uuid }, createdUser);
+                var createdTeam = await _teamService.AddAsync(team);
+                return CreatedAtAction(nameof(Get), new { uuid = createdTeam.Uuid }, createdTeam);
             }
             catch (Exception ex)
             {
@@ -67,17 +67,16 @@ namespace API.Controllers.v1
         }
 
         [HttpPut("{uuid}")]
-        [Authorize]
-        public async Task<IActionResult> Update(Guid uuid, [FromBody] UserRequest user)
+        public async Task<IActionResult> Update(Guid uuid, [FromBody] TeamRequest team)
         {
             try
             {
-                var updatedUser = await _userService.UpdateAsync(uuid, user);
-                if (updatedUser == null)
+                var updatedTeam = await _teamService.UpdateAsync(uuid, team);
+                if (updatedTeam == null)
                 {
                     return NotFound();
                 }
-                return Ok(updatedUser);
+                return Ok(updatedTeam);
             }
             catch (Exception ex)
             {
@@ -86,24 +85,29 @@ namespace API.Controllers.v1
         }
 
         [HttpDelete("{uuid}")]
-        [Authorize]
         public async Task<IActionResult> Delete(Guid uuid)
         {
             try
             {
-                var user = await _userService.GetByIdAsync(uuid);
-                if (user == null)
+                var team = await _teamService.GetByIdAsync(uuid);
+                if (team == null)
                 {
                     return NotFound();
                 }
 
-                await _userService.DeleteAsync(uuid);
-                return Ok(user);
+                await _teamService.DeleteAsync(uuid);
+                return Ok(team);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpGet("option-items")]
+        public async Task<IEnumerable<OptionItemResponse>> GetTeamsToSelectOption()
+        {
+            return _mapper.Map<List<OptionItemResponse>>(await _teamService.GetAllAsync());
         }
     }
 }

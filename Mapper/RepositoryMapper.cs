@@ -11,6 +11,7 @@ namespace Mapper
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
 
         }
     }
