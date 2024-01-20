@@ -1,4 +1,5 @@
-﻿using Database;
+﻿using Dapper;
+using Database;
 using Domain.Entity;
 using Domain.Interface.Repository;
 
@@ -10,5 +11,24 @@ namespace Repository
         {
 
         }
+
+        public async Task<List<TeamEntity>> GetByUuidList(IList<Guid> selectedTeams)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+
+                var uuidsString = string.Join(",", selectedTeams.Select(id => $"'{id}'"));
+
+                var query = $"SELECT * FROM Team WHERE Uuid IN ({uuidsString})";
+
+                return (List<TeamEntity>)await connection.QueryAsync<TeamEntity>(query);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }

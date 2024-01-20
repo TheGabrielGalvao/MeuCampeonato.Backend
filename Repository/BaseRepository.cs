@@ -31,11 +31,20 @@ namespace Repository
             return await connection.QueryAsync<T>($"SELECT * FROM {schemaName}.{tableName}");
         }
 
-        public virtual async Task<T> GetByIdAsync(Guid uuid)
+        public virtual async Task<T> GetByUuidAsync(Guid uuid)
         {
             var (tableName, schemaName) = EntityHelper.GetTableInfo<T>();
             using var connection = _context.CreateConnection();
             return await connection.QuerySingleOrDefaultAsync<T>($"SELECT * FROM {schemaName}.{tableName} WHERE Uuid = @Uuid", new { Uuid = uuid });
+        }
+
+        public virtual async Task<T> GetByIdAsync(int id)
+        {
+            var (tableName, schemaName) = EntityHelper.GetTableInfo<T>();
+            using var connection = _context.CreateConnection();
+
+            var sql = $"SELECT * FROM {schemaName}.{tableName} WHERE Id = @Id";
+            return await connection.QuerySingleOrDefaultAsync<T>(sql, new { Id = id });
         }
 
         public virtual async Task<T> AddAsync(T entity)
@@ -50,7 +59,11 @@ namespace Repository
             var sql = $"INSERT INTO {schemaName}.{tableName} ({columnNames}) VALUES ({columnValues})";
 
             var result = await connection.ExecuteAsync(sql, entity);
-            return result > 0 ? entity : null;
+
+            var sqlRetorno = $"SELECT TOP 1 * FROM {schemaName}.{tableName} ORDER BY Id DESC";
+
+
+            return result > 0 ? await connection.QuerySingleOrDefaultAsync<T>(sqlRetorno) : null;
         }
 
 
@@ -67,7 +80,7 @@ namespace Repository
         {
             var (tableName, schemaName) = EntityHelper.GetTableInfo<T>();
             using var connection = _context.CreateConnection();
-            var entity = await GetByIdAsync(uuid);
+            var entity = await GetByUuidAsync(uuid);
             if (entity != null)
             {
                 var result = await connection.ExecuteAsync($"DELETE FROM {schemaName}.{tableName} WHERE Uuid = @Uuid", new { Uuid = uuid });

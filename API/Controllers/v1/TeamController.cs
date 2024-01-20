@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Domain.DTO;
 using Domain.Interface.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.v1
 {
-    
+
     [ApiController]
     [Route("api/v1/[controller]")]
     public class TeamController : ControllerBase

@@ -12,6 +12,9 @@ namespace Mapper
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<IMatchRepository, MatchRepository>();
+            services.AddScoped<IChampionshipRepository, ChampionshipRepository>();
+            services.AddScoped<IChampionshipHistoryRepository, ChampionshipHistoryRepository>();
 
         }
     }

@@ -1,9 +1,11 @@
 ﻿using Domain.Entity.Common;
 using Domain.Enum;
+using Util.CustomAttributes;
 
 namespace Domain.Entity
 {
-    internal class MatchEntity : DefaultEntity
+    [TableInfo("Match")]
+    public class MatchEntity : DefaultEntity
     {
         public int HomeTeamId { get; set; }
         public int AwayTeamId { get; set; }
@@ -12,8 +14,7 @@ namespace Domain.Entity
         public int? HomeTeamPenaltyScore { get; set; }
         public int? AwayTeamPenaltyScore { get; set; }
         public int MatchWinnerId { get; set; }
-        public EChampionshipStage TournamentStage { get; set; }
-        public int TournamentId { get; set; }
-        public int TournamentUserId { get; set; }
+        public EChampionshipStage ChampionshipStage { get; set; }
+        public int ChampionshipId { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Service
 
         public virtual async Task<TResponse> GetByIdAsync(Guid uuid)
         {
-            var entity = await _repository.GetByIdAsync(uuid);
+            var entity = await _repository.GetByUuidAsync(uuid);
             return _mapper.Map<TResponse>(entity);
         }
 
@@ -36,7 +36,7 @@ namespace Service
 
         public virtual async Task<TResponse> UpdateAsync(Guid uuid, TRequest request)
         {
-            var entity = await _repository.GetByIdAsync(uuid);
+            var entity = await _repository.GetByUuidAsync(uuid);
             if (entity != null)
             {
                 _mapper.Map(request, entity);

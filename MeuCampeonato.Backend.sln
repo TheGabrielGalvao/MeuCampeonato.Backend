@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{3D5EF35D-8CDA-4B2C-B2AB-5CDD7F4874B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{3D5EF35D-8CDA-4B2C-B2AB-5CDD7F4874B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{57B9A849-7F55-49CC-9952-BE0E87F41EF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "Database\Database.csproj", "{57B9A849-7F55-49CC-9952-BE0E87F41EF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{C835EED0-1351-4DDD-9318-31FA8889FB82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{C835EED0-1351-4DDD-9318-31FA8889FB82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper", "Mapper\Mapper.csproj", "{EFF9B42B-6323-431B-AEDC-270635783D4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper", "Mapper\Mapper.csproj", "{EFF9B42B-6323-431B-AEDC-270635783D4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{28803620-6E82-478A-8B2C-32402FC5DEA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{28803620-6E82-478A-8B2C-32402FC5DEA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{70494716-4A6A-422C-B978-31ACE6B70E99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{70494716-4A6A-422C-B978-31ACE6B70E99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Util\Util.csproj", "{5B8961ED-D528-4C6C-A1F3-75B6CDA13338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Util", "Util\Util.csproj", "{5B8961ED-D528-4C6C-A1F3-75B6CDA13338}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Test\Tests.csproj", "{7892C675-7035-49AE-BD71-B69D31246646}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{5B8961ED-D528-4C6C-A1F3-75B6CDA13338}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B8961ED-D528-4C6C-A1F3-75B6CDA13338}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B8961ED-D528-4C6C-A1F3-75B6CDA13338}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7892C675-7035-49AE-BD71-B69D31246646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7892C675-7035-49AE-BD71-B69D31246646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7892C675-7035-49AE-BD71-B69D31246646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7892C675-7035-49AE-BD71-B69D31246646}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
