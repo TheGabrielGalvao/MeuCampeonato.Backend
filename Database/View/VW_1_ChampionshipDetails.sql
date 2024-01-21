@@ -19,7 +19,7 @@ CREATE VIEW VW_ChampionshipDetails AS (
              AWT.Name AS AwayTeamName,
              M.AwayTeamNormalTimeScore,
              M.AwayTeamPenaltyScore,
-		        MW.Uuid AS MatchWinnerUuid,
+		     MW.Uuid AS MatchWinnerUuid,
              MW.Name AS MatchWinnerName
      
          FROM Championship CH 

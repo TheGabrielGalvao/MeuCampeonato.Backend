@@ -31,7 +31,7 @@ namespace Repository
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Name, user.UserName),
 
                 }),
                 Expires = DateTime.UtcNow.AddHours(8),

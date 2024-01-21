@@ -6,7 +6,7 @@ namespace Domain.Entity
     [TableInfo("Users", "auth")]
     public class UserEntity : DefaultEntity
     {
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string UserPass { get; set; }
     }
 }

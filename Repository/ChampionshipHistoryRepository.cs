@@ -21,7 +21,7 @@ namespace Repository
                 using var connection = _context.CreateConnection();
 
 
-                var query = $"SELECT * FROM VW_ChampionshipDetails WHERE UserUuid IN ({userUuid})";
+                var query = $"SELECT * FROM VW_ChampionshipDetails WHERE UserUuid = @UserUuid";
 
                 return (List<ChampionshipDetailsDTO>)await connection.QueryAsync<ChampionshipDetailsDTO>(query);
             }
@@ -38,9 +38,9 @@ namespace Repository
                 using var connection = _context.CreateConnection();
 
 
-                var query = $"SELECT * FROM VW_ChampionshipDetails WHERE ChampionshipUuid = '{Uuid}'";
+                var query = $"SELECT * FROM VW_ChampionshipDetails WHERE ChampionshipUuid = @Uuid";
 
-                return (List<ChampionshipDetailsDTO>)await connection.QueryAsync<ChampionshipDetailsDTO>(query);
+                return (List<ChampionshipDetailsDTO>)await connection.QueryAsync<ChampionshipDetailsDTO>(query, new {Uuid = Uuid});
             }
             catch (Exception ex)
             {
