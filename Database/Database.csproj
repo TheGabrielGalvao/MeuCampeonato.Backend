@@ -12,6 +12,11 @@
     <None Remove="Table\TBL_2_Create_Table_Team.sql" />
     <None Remove="Table\TBL_3_Create_Table_Championship.sql" />
     <None Remove="Table\TBL_4_Create_Table_Match.sql" />
+    <None Remove="View\VW_1_ChampionshipDetails.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="View\VW_1_ChampionshipDetails.sql" />
   </ItemGroup>
 
   <ItemGroup>
