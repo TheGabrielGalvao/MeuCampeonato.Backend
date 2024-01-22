@@ -25,7 +25,7 @@ Antes de começar, certifique-se de ter os seguintes requisitos instalados:
 
 - [.NET Core SDK](https://dotnet.microsoft.com/download)
 - [Visual Studio](https://visualstudio.microsoft.com/) ou [Visual Studio Code](https://code.visualstudio.com/) (opcional, dependendo das suas preferências)
-- SQL Server (ou outro banco de dados relacional suportado)
+- SQL Server
 
 ## Configuração
 
