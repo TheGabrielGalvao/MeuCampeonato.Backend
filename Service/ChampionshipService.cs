@@ -5,6 +5,7 @@ using Domain.Enum;
 using Domain.Interface.Repository;
 using Domain.Interface.Service;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Service
 {
@@ -87,12 +88,31 @@ namespace Service
             return _mapper.Map<List<ChampionshipDetailsDTO>>(response);
         }
 
-        public async Task<IList<ChampionshipDetailsDTO>> GetChampionshipDetailsByUserUuid(Guid userUuid)
+        public async Task<IList<ChampionshipResponse>> GetChampionshipDetailsByUserUuid(Guid userUuid)
         {
             var response = await _championshipHistoryRepository.GetHistoryByUserUuid(userUuid);
 
-            return _mapper.Map<List<ChampionshipDetailsDTO>>(response);
+
+            var groupedChampionships = response
+                .GroupBy(championship => championship.ChampionshipUuid)
+                .Select(group => new ChampionshipResponse
+                {
+                    Uuid = group.Key,
+                    Name = group.First().Name,
+                    User = new UserResponse
+                    {
+                        Uuid = group.First().UserUuid,
+                        UserName = group.First().Username,
+                    },
+                    Matches = _mapper.Map<List<MatchResponse>>(group.ToList())
+                })
+                .ToList();
+
+            return _mapper.Map<List<ChampionshipResponse>>(groupedChampionships);
+            
         }
+
+
     }
 }
 

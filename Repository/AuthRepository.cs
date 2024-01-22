@@ -4,6 +4,7 @@ using Domain.DTO;
 using Domain.DTO.Settings;
 using Domain.Entity;
 using Domain.Interface.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,43 +15,40 @@ namespace Repository
 {
     public class AuthRepository : IAuthRepository
     {
-        protected readonly AppDbContext _context;
         private readonly JwtSettingsDTO _jwtSettings;
 
-        public AuthRepository(AppDbContext context, IOptions<JwtSettingsDTO> jwtSettings)
+        public AuthRepository(IConfiguration configuration, IOptions<JwtSettingsDTO> jwtSettings)
         {
-            _context = context;
             _jwtSettings = jwtSettings.Value;
         }
 
         public Task<string> GenerateToken(UserEntity user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var claims = new[]
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-
-                }),
-                Expires = DateTime.UtcNow.AddHours(8),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            ;
+            var expiration = DateTime.UtcNow.AddHours(1);
+
+            JwtSecurityToken token = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: claims,
+                expires: expiration,
+                signingCredentials: credentials
+            );
+
+            var tokenHandler = new JwtSecurityTokenHandler();
 
             return Task.FromResult(tokenHandler.WriteToken(token));
         }
 
-        public async Task<UserEntity> GetUserAsync(AuthRequest request)
-        {
-            try
-            {
-                using var connection = _context.CreateConnection();
-                return await connection.QuerySingleOrDefaultAsync<UserEntity>($"SELECT * FROM auth.Users WHERE Username = @Username", new { Username = request.Username, UserPass = request.Password });
-            }
-            catch (Exception ex) { return null; }
-        }
+        
     }
 }

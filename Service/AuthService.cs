@@ -13,13 +13,12 @@ namespace Service
         private readonly IAuthRepository _authRepository;
         private readonly IUserRepository _userRepository;
         protected readonly IMapper _mapper;
-        private readonly JwtSettingsDTO _jwtSettings;
-        public AuthService(IAuthRepository authRepository, IUserRepository userRepository, IMapper mapper, IOptions<JwtSettingsDTO> jwtSettings)
+        public AuthService(IAuthRepository authRepository, IUserRepository userRepository, IMapper mapper)
         {
             _authRepository = authRepository;
             _userRepository = userRepository;
             _mapper = mapper;
-            _jwtSettings = jwtSettings.Value;
+            
         }
         public Task<bool> CheckToken(string token)
         {
@@ -28,7 +27,7 @@ namespace Service
 
         public async Task<AuthResponse> ExecuteAuth(AuthRequest request)
         {
-            var user = await _authRepository.GetUserAsync(request);
+            var user = await _userRepository.GetUserAsync(request);
 
             if (user == null || !EncryptionHelper.VerifyPassword(request.Password, user.UserPass))
             {

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.DTO;
 using Domain.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
@@ -18,12 +19,13 @@ namespace API.Controllers.v1
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("history/{userUuid}")]
+        [Authorize]
+        public async Task<IActionResult> GetAll(Guid userUuid)
         {
             try
             {
-                var championships = await _championshipService.GetAllAsync();
+                var championships = await _championshipService.GetChampionshipDetailsByUserUuid(userUuid);
                 return Ok(championships);
             }
             catch (Exception ex)
@@ -33,6 +35,7 @@ namespace API.Controllers.v1
         }
 
         [HttpGet("{uuid}")]
+        [Authorize]
         public async Task<IActionResult> Get(Guid uuid)
         {
             try
@@ -51,6 +54,7 @@ namespace API.Controllers.v1
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] ChampionshipRequest championship)
         {
             try

@@ -5,6 +5,8 @@ namespace Domain.Interface.Repository
 {
     public interface IUserRepository : IBaseRepository<UserEntity>
     {
-        Task<UserEntity> Get(AuthRequest request);
+        Task<UserEntity> GetUserAsync(AuthRequest request);
+
+        Task<UserEntity> GetFullUserInfo(string username);
     }
 }

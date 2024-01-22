@@ -3,6 +3,7 @@ using Database;
 using Domain.DTO.Settings;
 using Mapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -18,7 +19,16 @@ var configuration = new ConfigurationBuilder()
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddTransient<AppDbContext>(_ => new AppDbContext(connectionString));
 
-IMapper mapper = EntityMapper.Configure();
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettingsDTO>();
+
+
+IMapper mapper = DependencyMapper.Configure();
+
+//RepositoryMapper.Map(builder.Services, configuration, jwtSettingsOptions);
+
+//ServiceMapper.Map(builder.Services, configuration);
+
+
 builder.Services.AddSingleton(mapper);
 
 
@@ -33,34 +43,40 @@ builder.Services.AddSwaggerGen(c =>
         Description = "JWT Authorization header using the Bearer scheme",
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
-        BearerFormat = "JWT"
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Name = "Authorization"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
+{
     {
+        new OpenApiSecurityScheme
         {
-            new OpenApiSecurityScheme
+            Reference = new OpenApiReference
             {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        },
+        Array.Empty<string>()
+    }
 });
 
-var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettingsDTO>();
+});
+
+
 
 
 var tokenValidationParameters = new TokenValidationParameters
 {
-    ValidateIssuer = false,
-    ValidateAudience = false,
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidIssuer = jwtSettings.Issuer,
+    ValidAudience = jwtSettings.Audience,
     ValidateIssuerSigningKey = true,
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.SecretKey))
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+    ClockSkew = TimeSpan.Zero
 };
 
 builder.Services.AddAuthentication(options =>
@@ -74,13 +90,20 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = tokenValidationParameters;
 });
 
+var jwtSettingsOptions = Options.Create(jwtSettings);
+
+DependencyMapper.MapDependenceInjection(builder.Services, configuration, jwtSettingsOptions);
+
 builder.Services.Configure<JwtSettingsDTO>(builder.Configuration.GetSection("JwtSettings"));
 
-RepositoryMapper.Map(builder.Services, configuration);
+builder.Services.AddHttpClient();
 
-ServiceMapper.Map(builder.Services, configuration);
+
 
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Seu log informativo aqui.");
 
 DatabaseSetup.Initialize(connectionString);
 
@@ -91,7 +114,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
 
 app.UseCors(builder =>
     builder.AllowAnyOrigin()
@@ -100,8 +122,15 @@ app.UseCors(builder =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+
 
 
 app.MapControllers();
+
+
 
 app.Run();

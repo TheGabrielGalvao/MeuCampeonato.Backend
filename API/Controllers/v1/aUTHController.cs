@@ -1,5 +1,6 @@
 ﻿using Domain.DTO;
 using Domain.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.v1
@@ -29,6 +30,7 @@ namespace API.Controllers.v1
         }
 
         [HttpGet("VerifyToken")]
+        [Authorize]
         public async Task<IActionResult> VerifyToken(string token)
         {
             if (string.IsNullOrEmpty(token))

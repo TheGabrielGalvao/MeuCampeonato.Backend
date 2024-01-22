@@ -51,12 +51,35 @@ namespace API.Controllers.v1
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] UserRequest user)
         {
             try
             {
                 var createdUser = await _userService.AddAsync(user);
                 return CreatedAtAction(nameof(Get), new { uuid = createdUser.Uuid }, createdUser);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] UserRequest user)
+        {
+            try
+            {
+                var userExists = _userService.GetFullUserInfo(user.UserName);
+                if (userExists.Result == null)
+                {
+                    var createdUser = await _userService.AddAsync(user);
+                    return CreatedAtAction(nameof(Get), new { uuid = createdUser.Uuid }, createdUser);
+                }
+                else
+                {
+                    return Ok("This Username already exists!");
+                }
             }
             catch (Exception ex)
             {
@@ -97,6 +120,28 @@ namespace API.Controllers.v1
 
                 await _userService.DeleteAsync(uuid);
                 return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("full-info")]
+        [Authorize]
+        public async Task<IActionResult> GetFullUserInfo()
+        {
+            try
+            {
+                var username = User.Identity?.Name; // Obtém o nome do usuário logado
+                var userInfo = await _userService.GetFullUserInfo(username);
+
+                if (userInfo == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(userInfo);
             }
             catch (Exception ex)
             {

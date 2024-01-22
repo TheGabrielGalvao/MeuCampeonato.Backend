@@ -7,6 +7,6 @@ namespace Domain.Interface.Service
     {
         Task<IList<ChampionshipDetailsDTO>> GetChampionshipDetailsByUuid(Guid uuid);
 
-        Task<IList<ChampionshipDetailsDTO>> GetChampionshipDetailsByUserUuid(Guid userUuid);
+        Task<IList<ChampionshipResponse>> GetChampionshipDetailsByUserUuid(Guid userUuid);
     }
 }

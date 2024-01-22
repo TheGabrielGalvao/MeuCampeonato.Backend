@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.DTO;
 using Domain.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.v1
@@ -20,6 +21,7 @@ namespace API.Controllers.v1
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -34,6 +36,7 @@ namespace API.Controllers.v1
         }
 
         [HttpGet("{uuid}")]
+        [Authorize]
         public async Task<IActionResult> Get(Guid uuid)
         {
             try
@@ -52,6 +55,7 @@ namespace API.Controllers.v1
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] TeamRequest team)
         {
             try
@@ -66,6 +70,7 @@ namespace API.Controllers.v1
         }
 
         [HttpPut("{uuid}")]
+        [Authorize]
         public async Task<IActionResult> Update(Guid uuid, [FromBody] TeamRequest team)
         {
             try
@@ -84,6 +89,7 @@ namespace API.Controllers.v1
         }
 
         [HttpDelete("{uuid}")]
+        [Authorize]
         public async Task<IActionResult> Delete(Guid uuid)
         {
             try
@@ -104,6 +110,7 @@ namespace API.Controllers.v1
         }
 
         [HttpGet("option-items")]
+        [Authorize]
         public async Task<IEnumerable<OptionItemResponse>> GetTeamsToSelectOption()
         {
             return _mapper.Map<List<OptionItemResponse>>(await _teamService.GetAllAsync());

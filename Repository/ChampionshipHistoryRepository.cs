@@ -2,6 +2,7 @@
 using Database;
 using Domain.DTO;
 using Domain.Interface.Repository;
+using System;
 
 namespace Repository
 {
@@ -14,14 +15,13 @@ namespace Repository
             _context = context;
         }
 
-        public async Task<IList<ChampionshipDetailsDTO>> GetHistoryByUserUuid(Guid userUuid)
+        public async Task<IList<ChampionshipDetailsDTO>> GetHistory()
         {
             try
             {
                 using var connection = _context.CreateConnection();
 
-
-                var query = $"SELECT * FROM VW_ChampionshipDetails WHERE UserUuid = @UserUuid";
+                var query = $"SELECT * FROM VW_ChampionshipDetails";
 
                 return (List<ChampionshipDetailsDTO>)await connection.QueryAsync<ChampionshipDetailsDTO>(query);
             }
@@ -31,7 +31,24 @@ namespace Repository
             }
         }
 
-        public async Task<IList<ChampionshipDetailsDTO>> GetHistoryByUuid(Guid Uuid)
+        public async Task<IList<ChampionshipDetailsDTO>> GetHistoryByUserUuid(Guid userUuid)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+
+
+                var query = $"SELECT * FROM VW_ChampionshipDetails WHERE UserUuid = @UserUuid";
+
+                return (List<ChampionshipDetailsDTO>)await connection.QueryAsync<ChampionshipDetailsDTO>(query, new { UserUuid = userUuid });
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IList<ChampionshipDetailsDTO>> GetHistoryByUuid(Guid uuid)
         {
             try
             {
@@ -40,7 +57,7 @@ namespace Repository
 
                 var query = $"SELECT * FROM VW_ChampionshipDetails WHERE ChampionshipUuid = @Uuid";
 
-                return (List<ChampionshipDetailsDTO>)await connection.QueryAsync<ChampionshipDetailsDTO>(query, new {Uuid = Uuid});
+                return (List<ChampionshipDetailsDTO>)await connection.QueryAsync<ChampionshipDetailsDTO>(query, new {Uuid = uuid});
             }
             catch (Exception ex)
             {
